@@ -40,8 +40,9 @@ def add_persons():
     age = info["Age"]
     email = info["Email"]
 
-    cur.execute(
-            """ INSERT INTO persons (Age, Email, Name) VALUES (%s, %s, %s)""", (age, email, name)
+    cur.execute("""
+            INSERT INTO persons (Age, Email, Name) VALUES (%s, %s, %s)
+    """, (age, email, name)
     )
     mysql.connection.commit()
     print("row(s) affected {}".format(cur.rowcount))
@@ -55,7 +56,24 @@ def get_persons_by_id(id):
     data = data_fetch (""" SELECT * FROM persons WHERE personid = {} """.format(id))
     return make_response(jsonify(data), 200)
 
+@app.route("/persons./<int:id>", methods=["PUT"])
+def update_person(id):
+    cur = mysql.connection.cursor()
+    info = request.get_json()
 
+    name = info["Name"]
+    age = info["Age"]
+    email = info["Email"]
+
+    cur.execute("""
+        UPDATE persons SET Age = %s, Email = %s, Name = %s WHERE personid = %s
+    """, (age, email, name, id),
+    )
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+
+    return make_response(jsonify({"message":"person updated successfully", "rowsaffected": rows_affected}), 201)
 
 if __name__ == "__main__":
     app.run(debug=True)
