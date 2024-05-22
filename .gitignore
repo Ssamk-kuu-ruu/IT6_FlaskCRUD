@@ -1,5 +1,3 @@
-'venv/' 
-'venv/' 
 venv/ 
-venv/ 
-venv/ 
+.gitignore 
+__pycache__/ 
