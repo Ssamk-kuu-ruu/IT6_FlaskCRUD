@@ -96,5 +96,26 @@ def update_person(id):
     )
 
 
+@app.route("/persons/<int:id>", methods=["DELETE"])
+def delete_persons(id):
+    cur = mysql.connection.cursor()
+    cur.execute(
+        """
+        DELETE FROM persons WHERE personid= %s
+    """,
+        (id,),
+    )
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+
+    return make_response(
+        jsonify(
+            {"message": "person deleted successfully", "rowsaffected": rows_affected}
+        ),
+        200,
+    )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
