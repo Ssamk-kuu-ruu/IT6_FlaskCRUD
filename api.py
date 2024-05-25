@@ -116,6 +116,13 @@ def delete_persons(id):
         200,
     )
 
+@app.route("/persons/format", methods=["GET"])
+def get_params():
+    fmt = request.args.get('id')
+    foo = request.args.get('aaaa')
+
+    return make_response(jsonify({"format": fmt, "foo": foo}), 200)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
